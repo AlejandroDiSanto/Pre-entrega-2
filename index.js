@@ -1,102 +1,165 @@
-alert(`¡OFERTA!
-Si su compra es menor a $7000, tendrá un descuento del 10%,
-y si su compra es mayor a $7000, su descuento será de 20%. Elija el número del producto que desea comprar:`);
+const cards = document.getElementById('cards')
+const items = document.getElementById('items')
+const footer = document.getElementById('footer')
+const templateCard = document.getElementById('template-card').content
+const templateFooter = document.getElementById('template-footer').content
+const templateCarrito = document.getElementById('template-carrito').content
+const fragment = document.createDocumentFragment()
 
-const productos = [
-    { id: 1, nombre: "Anteojo Metal clasico", precio: 8000},
-    { id: 2, nombre: "Anteojo Zilo", precio: 10000},
-    { id: 3, nombre: "Anteojo TR90", precio: 6000}]
+const initCarrito = () => {
+    const getCarrito = localStorage.getItem('carrito')
+    if (getCarrito == null) {
+        return []
+    } else {
+        const parseCarrito = JSON.parse(getCarrito)
+        return parseCarrito
+    }
+}
+// Eventos
+// El evento DOMContentLoaded es disparado cuando el documento HTML ha sido completamente cargado y parseado
+document.addEventListener('DOMContentLoaded', e => { fetchData() });
+cards.addEventListener('click', e => { addCarrito(e) });
+items.addEventListener('click', e => { btnAumentarDisminuir(e) })
 
-const productPrint = () => productos.map((el)=>`${el.id}-${el.nombre}: $ ${el.precio}\n`);
+// Traer productos (Investigando para solucionar un error, encontre esas 2 posibilidades utilizando Fetch, ambas funcionan,
+//                   pero como no vimos promesas, utilice la primera (async y await) ,porque me fue mas facil de entender).
 
-let elegirProducto = Number(prompt(`        
-        ${productPrint()}                                                                                    
-        0-Para acabar y salir.`));
+const fetchData = async () => {
+    const res = await fetch('./productos.json');
+    const data = await res.json()
+    // console.log(data)
+    pintarCards(data)
+}
+//function fetchData() {
+//    fetch("./productos.json")
+//      .then((res) => res.json())       
+//      .then((data) => pintarCards(data));
+//  }
 
+// Pintar productos
+const pintarCards = data => {
+    data.forEach(item => {
+        templateCard.querySelector('h5').textContent = item.title
+        templateCard.querySelector('p').textContent = item.precio
+        templateCard.querySelector('button').dataset.id = item.id
+        const clone = templateCard.cloneNode(true)
+        fragment.appendChild(clone)
+    })
+    cards.appendChild(fragment)
+}
 
+// Agregar al carrito
+const addCarrito = e => {
+    if (e.target.classList.contains('btn-dark')) {
+        // console.log(e.target.dataset.id)
+        // console.log(e.target.parentElement)
+        setCarrito(e.target.parentElement)
+    }
+    e.stopPropagation()
+}
 
-//Inicializamos las variables que almacenaran las cantidades totales de los productos a comprar, y la variable del monto total.
-let cantidad_1 = 0;
-let cantidad_2 = 0;
-let cantidad_3 = 0;
-let total = 0.00;
-
-//Función que realiza la acumulacion de los montos por cada producto elegido.
-function acumulaTotal(id, cantidad) {
-    const obj = productos.find (producto => producto.id == id);
-    const precio = obj.precio;
-    total += precio * cantidad;
-    console.log(precio);
-    return total;
+const setCarrito = item => {
+    // console.log(item)
+    const producto = {
+        title: item.querySelector('h5').textContent,
+        precio: item.querySelector('p').textContent,
+        id: item.querySelector('button').dataset.id,
+        cantidad: 1
+    }
+    // console.log(producto)
+    // Buscar dentro del objeto si tiene o no cierta propiedad y devuelve un booleano.
+    
+    if (carrito.hasOwnProperty(producto.id)) {
+        producto.cantidad = carrito[producto.id].cantidad + 1
+    }
+    
+    carrito[producto.id] = producto 
+    
+    pintarCarrito()
     
 }
 
-//Frente a la eleccion de cada producto se pregunta el numero a comprar.
-while (elegirProducto != "0") {
-    switch (elegirProducto) {
-        case 1:
-            let cant1 = Number(prompt(`El producto elegido es "Metal Clasico", indique la cantidad: `));
-            acumulaTotal(elegirProducto, cant1); //acumula el monto total a pagar
-            cantidad_1 += cant1;           //acumula la cantidad total del producto 1
-            break;
-        case 2:
-            let cant2 = Number(prompt(`El producto elegido es "Zilo", indique la cantidad: `));
-            acumulaTotal(elegirProducto, cant2);  //acumula el monto total a pagar
-            cantidad_2 += cant2;            //acumula la cantidad total del producto 2
-            break;
-        case 3:
-            let cant3 = Number(prompt(`El producto elegido es "TR90", indique la cantidad: `));
-            acumulaTotal(elegirProducto, cant3); //acumula el monto total a pagar
-            cantidad_3 += cant3;           //acumula la cantidad total del producto 3
-            break;        
-        default:
-            alert('Ingrese una opción válida.');
-            break;
+const pintarCarrito = () => {
+    items.innerHTML = ''    
+    Object.values(carrito).forEach(producto => {
+        if (producto != null) {
+            templateCarrito.querySelector('th').textContent = producto.id
+            templateCarrito.querySelectorAll('td')[0].textContent = producto.title
+            templateCarrito.querySelectorAll('td')[1].textContent = producto.cantidad
+            templateCarrito.querySelector('span').textContent = producto.precio * producto.cantidad
+            
+            //botones
+            templateCarrito.querySelector('.btn-info').dataset.id = producto.id
+            templateCarrito.querySelector('.btn-danger').dataset.id = producto.id
+            
+            const clone = templateCarrito.cloneNode(true)
+            fragment.appendChild(clone)
+        }
+    })
+    items.appendChild(fragment)
+    
+    pintarFooter()   
+    
+    if (carrito.length == 0){
+        localStorage.clear ();
+    } else {
+        localStorage.setItem('carrito', JSON.stringify(carrito))
     }
-    //Se presenta el menu de eleccion nuevamente hasta que el usuario elija "0" y salga del menu.
-    elegirProducto = Number(prompt(`       
-        ${productPrint()}                                                              
-        0-Para acabar y salir.`));
 }
 
-// Se presenta el resumen de la compra, indicando el precio unitario y las cantidades elegidas
-// Además se indica el monto total a pagar.
-alert(`
-    Resumen de la compra:        
-    ${productPrint()}      
-    >> La Cantidad del producto solicitada es ${cantidad_1} 
-    >> La Cantidad del producto solicitada es ${cantidad_2}
-    >> La Cantidad del producto solicitada es ${cantidad_3}       
-    El monto total de la compra es de $ ${total}`);
+const pintarFooter = () => {
+    footer.innerHTML = ''
+    
+    if (Object.keys(carrito).length === 0) {
+        footer.innerHTML = `
+        <th scope="row" colspan="5">Carrito vacío</th>
+        `
+        return
+    }
+    
+    // sumar cantidad y sumar totales
+    const nCantidad = Object.values(carrito).reduce((acc, producto) =>  acc + (producto ? producto.cantidad : 0), 0)
+    const nPrecio = Object.values(carrito).reduce((acc, producto) => acc + (producto ? producto.cantidad * producto.precio : 0), 0)  
+    
+    // console.log(nPrecio)
+    
+    templateFooter.querySelectorAll('td')[0].textContent = nCantidad
+    templateFooter.querySelector('span').textContent = nPrecio
+    
+    const clone = templateFooter.cloneNode(true)
+    fragment.appendChild(clone)
+    
+    footer.appendChild(fragment)
+    
+    const boton = document.querySelector('#vaciar-carrito')
+    boton.addEventListener('click', () => {
+        carrito = []
+        pintarCarrito()
+    })
+    
+}
 
-
-
-let descuento = 0;
-let comentario = "";    
-
-const res = productos.map((el) => {
-       if (el.precio > 7000) {
-         return {
-           name: el.nombre,
-           price: el.precio,
-           descuento: el.precio * 0.2,
-           comentario: "[Monto mayor a $7000, 20% de descuento]",
-         };
-       } else {
-         return {
-           name: el.nombre,
-           price: el.precio,
-           descuento: el.precio * 0.1,
-           comentario: "[Monto menor a $7000, 10% de descuento]",
-         };
-       }
-     });
-console.log(res);
-
-const filtroPrecio = productos.filter (producto => producto.precio < 7000)
-
-const listaDeProductos = productos.map (producto => producto.nombre)
-
-console.log(listaDeProductos);
-console.log (filtroPrecio);
-
+const btnAumentarDisminuir = e => {
+    // console.log(e.target.classList.contains('btn-info'))
+    if (e.target.classList.contains('btn-info')) {
+        const producto = carrito[e.target.dataset.id]
+        producto.cantidad++
+        
+        carrito[e.target.dataset.id] = producto
+        pintarCarrito()
+    }
+    
+    if (e.target.classList.contains('btn-danger')) {
+        const producto = carrito[e.target.dataset.id]
+        producto.cantidad--
+        if (producto.cantidad === 0) {
+            delete carrito[e.target.dataset.id]
+        } else {
+            carrito[e.target.dataset.id] = producto
+        }
+        pintarCarrito()
+    }
+    e.stopPropagation()
+}
+let carrito = initCarrito();
+pintarCarrito();
