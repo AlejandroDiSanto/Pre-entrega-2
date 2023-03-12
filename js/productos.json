@@ -1,0 +1,122 @@
+[
+    {
+        "id": "anteojo-01",
+        "titulo": "Anteojo 01",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "anteojo-02",
+        "titulo": "Anteojo 02",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "anteojo-03",
+        "titulo": "Anteojo 03",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "anteojo-04",
+        "titulo": "Anteojo 04",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "anteojo-05",
+        "titulo": "Anteojo 05",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "anteojo-06",
+        "titulo": "Anteojo 06",
+        "imagen": "./img/anteojos/RB.png",
+        "categoria": {
+            "nombre": "Anteojos",
+            "id": "anteojos"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-01",
+        "titulo": "Anteojo Sol 01",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-02",
+        "titulo": "Anteojo Sol 02",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-03",
+        "titulo": "Anteojo Sol 03",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-04",
+        "titulo": "Anteojo Sol 04",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-05",
+        "titulo": "Anteojo Sol 05",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    },
+    {
+        "id": "AnteojoSol-06",
+        "titulo": "Anteojo Sol 06",
+        "imagen": "./img/anteojosSol/RB2.png",
+        "categoria": {
+            "nombre": "Anteojos de sol",
+            "id": "Anteojos-de-sol"
+        },
+        "precio": 1000
+    }        
+]
