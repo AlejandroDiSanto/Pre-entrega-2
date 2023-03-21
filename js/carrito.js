@@ -130,13 +130,46 @@ function actualizarTotal() {
 
 botonComprar.addEventListener("click", comprarCarrito);
 function comprarCarrito() {
-
+    
     productosEnCarrito.length = 0;
     localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-    
+        
     contenedorCarritoVacio.classList.add("disabled");
     contenedorCarritoProductos.classList.add("disabled");
     contenedorCarritoAcciones.classList.add("disabled");
     contenedorCarritoComprado.classList.remove("disabled");
 
+    
+    Swal.fire({
+    title: 'Escriba su nombre de usuario',
+    input: 'text',
+    inputAttributes: {
+        autocapitalize: 'off'
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Log in',
+    showLoaderOnConfirm: true,
+    preConfirm: (login) => {
+        return fetch(`//api.github.com/users/${login}`)
+        .then(response => {
+            if (!response.ok) {
+            throw new Error(response.statusText)
+            }
+            return response.json()
+        })
+        .catch(error => {
+            Swal.showValidationMessage(
+            `No existe el usuario: ${error}`
+            )
+        })
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+    if (result.isConfirmed) {
+        Swal.fire({
+        title: ` Muchas Gracias por su compra ${result.value.login}`,
+        icon: 'success',
+        })
+    }
+    })
 }
